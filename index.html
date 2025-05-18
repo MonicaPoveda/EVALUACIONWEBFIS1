@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evaluación de Física</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap" rel="stylesheet">
+  <style>
+    body {
+    font-family: 'Poppins', sans-serif;
+    background-image: url('https://wallpapers.com/images/hd/stitch-and-angel-couple-cc9vq9z6als31hxl.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #4a0033;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    }
+
+    input, button {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .container {
+      background-color: rgba(255, 192, 203, 0.95);
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 400px;
+
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+      text-align: center;
+
+
+      }
+
+    .hidden { display: none; }
+
+    .question {
+      margin-bottom: 20px;
+    }
+
+    .question label {
+      display: inline-block;
+      margin: 5px 0 5px 20px;
+    }
+
+    .result { font-weight: bold; }
+
+    h2 {
+      color: #d10073;
+      text-align: center;
+    }
+
+    button {
+      background-color: #ff69b4;
+      border: none;
+      padding: 8px 20px;
+      color: white;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+
+    button:hover {
+      background-color: #d10073;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" id="login">
+  <h2>💖 Bienvenido al examen final ♥️</h2>
+  <input type="text" id="nombre" placeholder="Nombre completo" required /><br /><br />
+  <input type="text" id="documento" placeholder="Documento de identidad" required /><br /><br />
+  <button onclick="iniciarEvaluacion()">Ingresar</button>
+  <button onclick="abrirAdmin()">Soy Administrador</button>
+</div>
+
+<div class="container hidden" id="passwordPrompt">
+  <h2>Acceso restringido</h2>
+  <input type="password" id="adminPassword" placeholder="Contraseña de administrador" />
+  <button onclick="verificarPassword()">Ingresar</button>
+</div>
+
+<div class="container hidden" id="examen">
+  <h2>Responde las siguientes preguntas:</h2>
+  <form id="formularioEvaluacion"></form>
+  <button onclick="finalizarEvaluacion()">Finalizar Evaluación</button>
+</div>
+
+<div class="container hidden" id="resultado"></div>
+
+<div class="container hidden" id="admin">
+  <h2>Panel de Administrador</h2>
+  <button onclick="mostrarIntentos()">Ver Intentos</button>
+  <ul id="listaIntentos"></ul>
+  <button onclick="volverInicio()">Volver al inicio</button>
+</div>
+
+<div class="container hidden" id="informe">
+  <h2>Informe de Resultados</h2>
+  <ul id="reporteResultados"></ul>
+  <button onclick="volverInicio()">Volver al inicio</button>
+</div>
+
+<script>
+  const preguntas = [
+    { pregunta: "¿Qué tipo de onda es el sonido?", opciones: ["Longitudinal", "Transversal", "Electromagnética"], correcta: 0 },
+    { pregunta: "¿Cuál es la velocidad de la luz en el vacío?", opciones: ["3x10^8 m/s", "3x10^6 m/s", "1.5x10^8 m/s"], correcta: 0 },
+    { pregunta: "¿Qué es un péndulo simple?", opciones: ["Una masa colgante que oscila", "Un resorte en movimiento", "Una onda estacionaria"], correcta: 0 },
+    { pregunta: "¿Cuál es la fórmula de la gravedad universal?", opciones: ["F = G*m1*m2/r^2", "F = m*a", "E = mc^2"], correcta: 0 },
+    { pregunta: "¿Qué característica no pertenece a las ondas electromagnéticas?", opciones: ["Requieren un medio", "Se propagan en el vacío", "Son transversales"], correcta: 0 },
+    { pregunta: "¿Qué tipo de onda es la luz?", opciones: ["Electromagnética", "Longitudinal", "Mecánica"], correcta: 0 },
+    { pregunta: "¿Qué fenómeno ocurre cuando la luz cambia de medio?", opciones: ["Refracción", "Reflexión", "Difracción"], correcta: 0 },
+    { pregunta: "¿Qué produce el sonido?", opciones: ["Vibraciones", "Luz", "Cargas eléctricas"], correcta: 0 },
+    { pregunta: "¿Qué frecuencia es audible por el ser humano?", opciones: ["20 Hz - 20 kHz", "1 Hz - 100 Hz", "50 kHz - 100 kHz"], correcta: 0 },
+    { pregunta: "¿Qué característica define una onda sonora?", opciones: ["Frecuencia", "Masa", "Temperatura"], correcta: 0 },
+    { pregunta: "¿Cuál es la unidad de frecuencia?", opciones: ["Hertz", "Newton", "Pascal"], correcta: 0 },
+    { pregunta: "¿Qué fenómeno ocurre cuando una onda se curva al pasar por una rendija?", opciones: ["Difracción", "Reflexión", "Refracción"], correcta: 0 },
+    { pregunta: "¿Qué tipo de ondas necesitan un medio para propagarse?", opciones: ["Mecánicas", "Electromagnéticas", "Lumínicas"], correcta: 0 },
+    { pregunta: "¿Cuál es la energía que transporta una onda?", opciones: ["Energía cinética y potencial", "Energía térmica", "Energía nuclear"], correcta: 0 },
+    { pregunta: "¿Qué es la longitud de onda?", opciones: ["Distancia entre crestas", "Altura de la onda", "Duración de una onda"], correcta: 0 }
+  ];
+
+  let respuestasUsuario = [], preguntasSeleccionadas = [], datosUsuario = {};
+
+  function iniciarEvaluacion() {
+    const nombre = document.getElementById("nombre").value;
+    const documento = document.getElementById("documento").value;
+    if (!nombre || !documento) return alert("Por favor, complete todos los campos.");
+
+    const intentos = JSON.parse(localStorage.getItem("intentos") || "[]");
+    const intentoPrevio = intentos.find(i => i.documento === documento);
+    if (intentoPrevio) {
+      alert(`¡Ya has realizado la evaluación! 😽💋\nPuntaje obtenido: ${intentoPrevio.puntaje}/50`);
+      return;
+    }
+
+    datosUsuario = { nombre, documento };
+    document.getElementById("login").classList.add("hidden");
+    document.getElementById("examen").classList.remove("hidden");
+
+    preguntasSeleccionadas = preguntas.sort(() => 0.5 - Math.random()).slice(0, 5);
+    const formulario = document.getElementById("formularioEvaluacion");
+    formulario.innerHTML = "";
+
+    preguntasSeleccionadas.forEach((p, i) => {
+      const div = document.createElement("div");
+      div.classList.add("question");
+      div.innerHTML = `<p><strong>${i + 1}. ${p.pregunta}</strong></p>` +
+        p.opciones.map((op, j) => `<label><input type='radio' name='preg${i}' value='${j}' required /> ${op}</label>`).join("<br>");
+      formulario.appendChild(div);
+    });
+  }
+
+  function finalizarEvaluacion() {
+    respuestasUsuario = [];
+    let puntaje = 0;
+    let incompletas = false;
+
+    preguntasSeleccionadas.forEach((p, i) => {
+      const respuesta = document.querySelector(`input[name='preg${i}']:checked`);
+      const seleccion = respuesta ? parseInt(respuesta.value) : -1;
+
+      if (seleccion === -1) {
+        incompletas = true;
+      }
+
+      respuestasUsuario.push(seleccion);
+      if (seleccion === p.correcta) puntaje += 10;
+    });
+
+    if (incompletas) {
+      alert("Por favor, responde todas las preguntas antes de finalizar.");
+      return;
+    }
+
+    guardarIntento(datosUsuario.nombre, datosUsuario.documento, puntaje);
+
+    document.getElementById("examen").classList.add("hidden");
+    const resultado = document.getElementById("resultado");
+    resultado.classList.remove("hidden");
+    resultado.innerHTML = `<h2>Resultado</h2><p>Puntaje: ${puntaje}/50</p>`;
+
+    preguntasSeleccionadas.forEach((p, i) => {
+      resultado.innerHTML += `<p><strong>Pregunta ${i + 1}</strong>: ${p.pregunta}<br>Tu respuesta: ${p.opciones[respuestasUsuario[i]] || "No respondida"}<br>Correcta: ${p.opciones[p.correcta]}</p>`;
+    });
+
+    resultado.innerHTML += `<button onclick="reiniciarEvaluacion()">Volver</button>`;
+  }
+
+  function reiniciarEvaluacion() {
+    location.reload();
+  }
+
+  function volverInicio() {
+    location.href = location.pathname;
+  }
+
+  function guardarIntento(nombre, documento, puntaje) {
+    const intentos = JSON.parse(localStorage.getItem("intentos") || "[]");
+    intentos.push({ nombre, documento, puntaje });
+    localStorage.setItem("intentos", JSON.stringify(intentos));
+  }
+
+  function mostrarIntentos() {
+    const intentos = JSON.parse(localStorage.getItem("intentos") || "[]");
+    const lista = document.getElementById("listaIntentos");
+    lista.innerHTML = intentos.map((i, idx) =>
+      `<li>${i.nombre} (${i.documento}) - ${i.puntaje}/50 <button onclick='eliminarIntento(${idx})'>Eliminar</button></li>`
+    ).join("");
+
+    const reporte = document.getElementById("reporteResultados");
+    reporte.innerHTML = intentos.map(i =>
+      `<li>${i.nombre} (${i.documento}) - Puntaje: ${i.puntaje}/50</li>`
+    ).join("");
+
+    document.getElementById("informe").classList.remove("hidden");
+  }
+
+  function eliminarIntento(index) {
+    let intentos = JSON.parse(localStorage.getItem("intentos") || "[]");
+    intentos.splice(index, 1);
+    localStorage.setItem("intentos", JSON.stringify(intentos));
+    mostrarIntentos();
+  }
+
+  function verificarPassword() {
+    const password = document.getElementById("adminPassword").value;
+    if (password === "admin123") {
+      if (location.hash === "#admin") {
+        document.getElementById("passwordPrompt").classList.add("hidden");
+        document.getElementById("admin").classList.remove("hidden");
+      } else if (location.hash === "#reporte") {
+        document.getElementById("passwordPrompt").classList.add("hidden");
+        mostrarIntentos();
+      }
+    } else {
+      alert("Contraseña incorrecta");
+    }
+  }
+
+  function abrirAdmin() {
+    document.getElementById("login").classList.add("hidden");
+    document.getElementById("passwordPrompt").classList.remove("hidden");
+    location.hash = "#admin";
+  }
+
+  if (location.hash === "#admin" || location.hash === "#reporte") {
+    document.getElementById("login").classList.add("hidden");
+    document.getElementById("passwordPrompt").classList.remove("hidden");
+  }
+</script>
+
+</body>
+</html>
