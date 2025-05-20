@@ -3,135 +3,357 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Evaluación de Física</title>
-  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap" rel="stylesheet">
+  <title>Evaluación Física</title>
   <style>
     body {
-    font-family: 'Poppins', sans-serif;
-    background-image: url('https://wallpapers.com/images/hd/stitch-and-angel-couple-cc9vq9z6als31hxl.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    color: #4a0033;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    }
-
-    input, button {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #e0c3fc, #f9f4ff);
+      background-image: url('https://wallpapers.com/images/hd/stitch-and-angel-couple-cc9vq9z6als31hxl.jpg');
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
     }
 
     .container {
-      background-color: rgba(255, 192, 203, 0.95);
+      background: #ffffffee;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       padding: 30px;
-      border-radius: 15px;
-      max-width: 400px;
-
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-
-      text-align: center;
-
-
-      }
-
-    .hidden { display: none; }
-
-    .question {
-      margin-bottom: 20px;
+      margin: 40px 20px;
+      width: 95%;
+      max-width: 600px;
     }
-
-    .question label {
-      display: inline-block;
-      margin: 5px 0 5px 20px;
-    }
-
-    .result { font-weight: bold; }
 
     h2 {
-      color: #d10073;
       text-align: center;
+      color: #7e57c2;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0;
+      font-weight: bold;
+      color: #6a1b9a;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ce93d8;
+      border-radius: 8px;
+      font-size: 16px;
+      background-color: #f3e5f5;
     }
 
     button {
-      background-color: #ff69b4;
-      border: none;
-      padding: 8px 20px;
+      background-color: #9575cd;
       color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 16px;
       cursor: pointer;
-      border-radius: 10px;
+      transition: background 0.3s ease;
+      margin-top: 10px;
     }
 
     button:hover {
-      background-color: #d10073;
+      background-color: #7e57c2;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .question {
+      margin-bottom: 25px;
+    }
+
+    #reloj {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: #ab47bc;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      z-index: 999;
+    }
+
+    .admin-panel {
+      margin-top: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #d1c4e9;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #9575cd;
+      color: white;
     }
   </style>
 </head>
 <body>
-
 <div class="container" id="login">
-  <h2>💖 Bienvenido al examen final ♥️</h2>
-  <input type="text" id="nombre" placeholder="Nombre completo" required /><br /><br />
-  <input type="text" id="documento" placeholder="Documento de identidad" required /><br /><br />
-  <button onclick="iniciarEvaluacion()">Ingresar</button>
-  <button onclick="abrirAdmin()">Soy Administrador</button>
-</div>
+  <h2>Inicio de sesión</h2>
+  <label>Documento:
+    <input type="text" id="documento" />
+  </label>
+  <label>Nombre:
+    <input type="text" id="nombre" readonly />
+  </label>
+  <button onclick="iniciarEvaluacion()">Iniciar Evaluación</button>
+  <button onclick="mostrarLoginAdmin()">Soy Administrador</button>
 
-<div class="container hidden" id="passwordPrompt">
-  <h2>Acceso restringido</h2>
-  <input type="password" id="adminPassword" placeholder="Contraseña de administrador" />
-  <button onclick="verificarPassword()">Ingresar</button>
 </div>
 
 <div class="container hidden" id="examen">
-  <h2>Responde las siguientes preguntas:</h2>
+  <h2>Evaluación de Física</h2>
+  <div id="reloj">15:00</div>
   <form id="formularioEvaluacion"></form>
   <button onclick="finalizarEvaluacion()">Finalizar Evaluación</button>
 </div>
 
 <div class="container hidden" id="resultado"></div>
+<div class="container hidden" id="justificaciones">
+  <h2>Justificaciones de las respuestas correctas</h2>
+  <ul id="listaJustificaciones"></ul>
+</div>
 
-<div class="container hidden" id="admin">
+<div class="container hidden" id="adminLogin">
+  <h2>Acceso Administrador</h2>
+  <label>Contraseña:
+    <input type="password" id="adminPassword" />
+  </label>
+  <button onclick="verificarAdmin()">Ingresar</button>
+</div>
+
+<div class="container hidden" id="adminPanel">
   <h2>Panel de Administrador</h2>
   <button onclick="mostrarIntentos()">Ver Intentos</button>
-  <ul id="listaIntentos"></ul>
-  <button onclick="volverInicio()">Volver al inicio</button>
+  <button onclick="exportarCSV()">Exportar CSV</button>
+  <button onclick="verPreguntas()">👀 Visualizar preguntas</button>
+
+  <!-- Contenedor de las preguntas -->
+  <div id="contenedorPreguntas" style="display:none; margin-top: 20px;"></div>
+
+  <!-- Tabla de intentos -->
+  <table id="tablaIntentos" class="hidden">
+    <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Documento</th>
+      <th>Puntaje</th>
+      <th>Acción</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </div>
 
-<div class="container hidden" id="informe">
-  <h2>Informe de Resultados</h2>
-  <ul id="reporteResultados"></ul>
-  <button onclick="volverInicio()">Volver al inicio</button>
-</div>
+
+
 
 <script>
-  const preguntas = [
-    { pregunta: "¿Qué tipo de onda es el sonido?", opciones: ["Longitudinal", "Transversal", "Electromagnética"], correcta: 0 },
-    { pregunta: "¿Cuál es la velocidad de la luz en el vacío?", opciones: ["3x10^8 m/s", "3x10^6 m/s", "1.5x10^8 m/s"], correcta: 0 },
-    { pregunta: "¿Qué es un péndulo simple?", opciones: ["Una masa colgante que oscila", "Un resorte en movimiento", "Una onda estacionaria"], correcta: 0 },
-    { pregunta: "¿Cuál es la fórmula de la gravedad universal?", opciones: ["F = G*m1*m2/r^2", "F = m*a", "E = mc^2"], correcta: 0 },
-    { pregunta: "¿Qué característica no pertenece a las ondas electromagnéticas?", opciones: ["Requieren un medio", "Se propagan en el vacío", "Son transversales"], correcta: 0 },
-    { pregunta: "¿Qué tipo de onda es la luz?", opciones: ["Electromagnética", "Longitudinal", "Mecánica"], correcta: 0 },
-    { pregunta: "¿Qué fenómeno ocurre cuando la luz cambia de medio?", opciones: ["Refracción", "Reflexión", "Difracción"], correcta: 0 },
-    { pregunta: "¿Qué produce el sonido?", opciones: ["Vibraciones", "Luz", "Cargas eléctricas"], correcta: 0 },
-    { pregunta: "¿Qué frecuencia es audible por el ser humano?", opciones: ["20 Hz - 20 kHz", "1 Hz - 100 Hz", "50 kHz - 100 kHz"], correcta: 0 },
-    { pregunta: "¿Qué característica define una onda sonora?", opciones: ["Frecuencia", "Masa", "Temperatura"], correcta: 0 },
-    { pregunta: "¿Cuál es la unidad de frecuencia?", opciones: ["Hertz", "Newton", "Pascal"], correcta: 0 },
-    { pregunta: "¿Qué fenómeno ocurre cuando una onda se curva al pasar por una rendija?", opciones: ["Difracción", "Reflexión", "Refracción"], correcta: 0 },
-    { pregunta: "¿Qué tipo de ondas necesitan un medio para propagarse?", opciones: ["Mecánicas", "Electromagnéticas", "Lumínicas"], correcta: 0 },
-    { pregunta: "¿Cuál es la energía que transporta una onda?", opciones: ["Energía cinética y potencial", "Energía térmica", "Energía nuclear"], correcta: 0 },
-    { pregunta: "¿Qué es la longitud de onda?", opciones: ["Distancia entre crestas", "Altura de la onda", "Duración de una onda"], correcta: 0 }
-  ];
+  const estudiantesAutorizados = [
+  { nombre: "MANUEL EDUARDO ALARCON AZA", documento: "1073482106" },
+  { nombre: "JULIAN MATEO ALARCON RAMIREZ", documento: "1073600736" },
+  { nombre: "HAILIN YULIANA ALGARRA LARA", documento: "1076241672" },
+  { nombre: "JHOSMAN FELIPE ALVARADO MORALES", documento: "1072643944" },
+  { nombre: "CAROL VANESA ANGULO TRIANA", documento: "1033098801" },
+  { nombre: "OMAR LEONARDO BALLEN MEJIA", documento: "74375762" },
+  { nombre: "TANIA LORENA BELTRAN LARA", documento: "1000256642" },
+  { nombre: "NICOLAS CAJAMARCA TORRES", documento: "1000256642" },
+  { nombre: "NICOLÁS CANASTERO RESTREPO", documento: "1070007615" },
+  { nombre: "MARIA CELESTE CARDENAS BELTRAN", documento: "1070008211" },
+  { nombre: "SAMUEL CASTELLANOS RIVERA", documento: "1053331373" },
+  { nombre: "KAREN JULIANA CASTILLO BARRETO", documento: "1072649183" },
+  { nombre: "GABRIEL STIVENS CHAVEZ CASTRO", documento: "1078346761" },
+  { nombre: "JUAN DIEGO CIFUENTES RODRIGUEZ", documento: "1072649677" },
+  { nombre: "MANUEL EDUARDO CORTES MARCELO", documento: "1027151480" },
+  { nombre: "JORGE ALCIDES DIAZ LOZANO", documento: "1013263461" },
+  { nombre: "CRISTIAN ANDRES GALEANO POVEDA", documento: "1070023677" },
+  { nombre: "PEDRO JOSE GARCIA CORREA", documento: "1072643327" },
+  { nombre: "DIEGO ALEJANDRO GARCIA OLAYA", documento: "1071328518" },
+  { nombre: "JHON SEBASTIAN GARNICA NIETO", documento: "1031805932" },
+  { nombre: "BRAYAN ANDRES GARZON ALMONACID", documento: "1072646390" },
+  { nombre: "JUAN JOSÉ GRACIA GOMEZ", documento: "1075653914" },
+  { nombre: "RONALD FELIPE GUAYAMBUCO MUÑOZ", documento: "1023082721" },
+  { nombre: "LAURA DANIELA HOYOS GORDILLO", documento: "1072653232" },
+  { nombre: "MARIANA LEÓN TRIANA", documento: "1031809345" },
+  { nombre: "JESUS SANTIAGO LOZANO PEÑA", documento: "1013263816" },
+  { nombre: "FABIAN GUILLERMO MELENDEZ GAITÁN", documento: "1013259710" },
+  { nombre: "SERGIO STEEVEN MORENO FORERO", documento: "1076241868" },
+  { nombre: "LIZETH VANESSA MORENO MORENO", documento: "1033099768" },
+  { nombre: "DAVID ANDRES PINZON CORREA", documento: "1072647998" },
+  { nombre: "BRAYAN ESTEBAN PINZON TORRES", documento: "1056482428" },
+  { nombre: "MONICA YULIHET POVEDA CARRASCO", documento: "1072648760" },
+  { nombre: "TOMAS POVEDA TRUJILLO", documento: "1014661030" },
+  { nombre: "MARIA PAULA RAMIREZ GOMEZ", documento: "1016950460" },
+  { nombre: "JUAN SEBASTIÁN RODRÍGUEZ BLANCO", documento: "1025534328" },
+  { nombre: "JUAN DAVID RUGE GARZON", documento: "1072647795" },
+  { nombre: "DANIEL CAMILO RUIZ RODRIGUEZ", documento: "1076739226" },
+  { nombre: "KEVIN SANTIAGO SANCHEZ QUITIAN", documento: "1130384023" },
+  { nombre: "JONATHAN ALEJANDRO YACUMA RIVERA", documento: "1072645629" }
+];
 
-  let respuestasUsuario = [], preguntasSeleccionadas = [], datosUsuario = {};
+  let datosUsuario = {};
+  let preguntasSeleccionadas = [];
+  let respuestasUsuario = [];
+  let temporizadorId;
+  let tiempoRestante = 15 * 60;
+
+const preguntas = [
+{
+  pregunta: "Un péndulo simple tiene una longitud de 1.44 m. ¿Cuál es su período de oscilación? Usa la fórmula T = 2π√(L/g), con g = 9.8 m/s².",
+  opciones: ["1.2 s", "2.4 s", "3.0 s", "4.8 s"],
+  correcta: 1,
+  justificacion: "Usando T = 2π√(L/g), con L = 1.44 m y g = 9.8 m/s², se obtiene T ≈ 2.4 s."
+},
+{
+  pregunta: "Una onda viaja a 300 m/s y tiene una frecuencia de 150 Hz. ¿Cuál es su longitud de onda? Usa λ = v / f.",
+  opciones: ["2 m", "0.5 m", "3 m", "1.5 m"],
+  correcta: 0,
+  justificacion: "La longitud de onda se calcula con λ = v / f = 300 / 150 = 2 m."
+},
+{
+  pregunta: "Una cuerda vibra en resonancia con una frecuencia natural de 60 Hz. Si se aumenta ligeramente la frecuencia del excitador, se observa una disminución en la amplitud. ¿Qué fenómeno explica esto?",
+  opciones: ["Interferencia", "Reverberación", "Resonancia", "Desfase fuera de resonancia"],
+  correcta: 3,
+  justificacion: "Al salir de la frecuencia de resonancia, se produce un desfase fuera de resonancia y disminuye la amplitud."
+},
+{
+  pregunta: "Un observador escucha una ambulancia que se aleja. ¿Qué ocurre con la frecuencia del sonido percibido debido al efecto Doppler?",
+  opciones: [
+    "La frecuencia se mantiene constante",
+    "La frecuencia aumenta",
+    "La frecuencia disminuye",
+    "La amplitud aumenta"
+  ],
+  correcta: 2,
+  justificacion: "Según el efecto Doppler, si la fuente se aleja, la frecuencia percibida disminuye."
+},
+{
+  pregunta: "¿Qué tipo de onda se representa en la siguiente imagen?<br><img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-7s4S_PB66jhhGvScAbY940wNg0NU8kLh-Q&s' alt='Onda transversal' style='max-width: 100px;'>",
+  opciones: ["Longitudinal", "Transversal", "Mecánica", "Electromagnética"],
+  correcta: 1,
+  justificacion: "La imagen muestra partículas que oscilan perpendicularmente a la dirección de propagación, típico de una onda transversal."
+},
+{
+  pregunta: "¿Cuál es el período de una onda que tiene una frecuencia de 25 Hz? Usa T = 1 / f.",
+  opciones: ["0.04 s", "4 s", "0.25 s", "0.02 s"],
+  correcta: 0,
+  justificacion: "T = 1 / f = 1 / 25 = 0.04 s."
+},
+{
+  pregunta: "Una onda se propaga en el agua con una velocidad de 1500 m/s y una longitud de onda de 3 m. ¿Cuál es su frecuencia?",
+  opciones: ["500 Hz", "1000 Hz", "200 Hz", "450 Hz"],
+  correcta: 0,
+  justificacion: "f = v / λ = 1500 / 3 = 500 Hz."
+},
+{
+  pregunta: "¿Cuál de los siguientes tipos de radiación del espectro electromagnético tiene mayor energía?",
+  opciones: ["Rayos X", "Microondas", "Infrarrojo", "Luz visible"],
+  correcta: 0,
+  justificacion: "Los rayos X tienen mayor energía debido a su alta frecuencia dentro del espectro electromagnético."
+},
+{
+  pregunta: "Una onda tiene una longitud de onda de 0.6 m y viaja a una velocidad de 180 m/s. ¿Cuál es su frecuencia?",
+  opciones: ["108 Hz", "300 Hz", "180 Hz", "120 Hz"],
+  correcta: 1,
+  justificacion: "f = v / λ = 180 / 0.6 = 300 Hz."
+},
+{
+  pregunta: "Si un péndulo en la Tierra tiene un período de 2 s, ¿cuál sería su período en un planeta con g = 3.7 m/s²? Usa T = 2π√(L/g).",
+  opciones: ["1 s", "3.3 s", "4.5 s", "2.6 s"],
+  correcta: 3,
+  justificacion: "Al disminuir la gravedad, el período aumenta. En este caso, T ≈ 2.6 s en g = 3.7 m/s²."
+},
+{
+  pregunta: "Cuando dos ondas de la misma frecuencia y amplitud se superponen en contrafase, el resultado es:",
+  opciones: [
+    "Una onda amplificada",
+    "Una onda estacionaria",
+    "Cancelación total (interferencia destructiva)",
+    "Aumento de frecuencia"
+  ],
+  correcta: 2,
+  justificacion: "Ondas en contrafase y con la misma amplitud se cancelan completamente (interferencia destructiva)."
+},
+{
+  pregunta: "¿Cuál de las siguientes ondas es mecánica y necesita un medio para propagarse?",
+  opciones: ["Luz", "Microondas", "Sonido", "Rayos gamma"],
+  correcta: 2,
+  justificacion: "El sonido es una onda mecánica y necesita un medio material para propagarse."
+},
+{
+  pregunta: "Una fuente de sonido emite una onda de 1000 Hz. Si un coche se acerca a la fuente a 20 m/s y el sonido viaja a 340 m/s, ¿qué frecuencia percibe el conductor? Usa: f' = f(v + v_o)/v.",
+  opciones: ["1059 Hz", "940 Hz", "1120 Hz", "980 Hz"],
+  correcta: 0,
+  justificacion: "f' = 1000 × (340 + 20)/340 ≈ 1059 Hz, debido al efecto Doppler."
+},
+{
+  pregunta: "Si se duplica la frecuencia de una onda manteniendo constante la velocidad, ¿qué sucede con la longitud de onda?",
+  opciones: ["Se duplica", "Se reduce a la mitad", "No cambia", "Se cuadruplica"],
+  correcta: 1,
+  justificacion: "λ = v / f, si f se duplica y v permanece constante, λ se reduce a la mitad."
+},
+{
+  pregunta: "Una onda tiene un período de 0.01 s. ¿Cuántas oscilaciones completa en un minuto?",
+  opciones: ["600", "1000", "60", "6000"],
+  correcta: 3,
+  justificacion: "60 segundos / 0.01 s por oscilación = 6000 oscilaciones en un minuto."
+}
+];
+
+
+
+  document.getElementById("documento").addEventListener("input", function () {
+    const doc = this.value;
+    const match = estudiantesAutorizados.find(e => e.documento === doc);
+    document.getElementById("nombre").value = match ? match.nombre : "";
+  });
+
+  function actualizarReloj() {
+    const minutos = String(Math.floor(tiempoRestante / 60)).padStart(2, '0');
+    const segundos = String(tiempoRestante % 60).padStart(2, '0');
+    document.getElementById("reloj").textContent = `${minutos}:${segundos}`;
+  }
+
+  function iniciarTemporizador() {
+    actualizarReloj();
+    temporizadorId = setInterval(() => {
+      tiempoRestante--;
+      actualizarReloj();
+      if (tiempoRestante <= 0) {
+        clearInterval(temporizadorId);
+        alert("⏰ El tiempo ha terminado. Se enviará la evaluación automáticamente.");
+        finalizarEvaluacion();
+      }
+    }, 1000);
+  }
 
   function iniciarEvaluacion() {
-    const nombre = document.getElementById("nombre").value;
-    const documento = document.getElementById("documento").value;
-    if (!nombre || !documento) return alert("Por favor, complete todos los campos.");
+    const nombre = document.getElementById("nombre").value.toUpperCase().trim();
+    const documento = document.getElementById("documento").value.trim();
+    const estudiante = estudiantesAutorizados.find(e => e.documento === documento && e.nombre === nombre);
+    if (!estudiante) return alert("🚫 Estudiante no autorizado o datos incorrectos.");
 
     const intentos = JSON.parse(localStorage.getItem("intentos") || "[]");
     const intentoPrevio = intentos.find(i => i.documento === documento);
@@ -143,8 +365,8 @@
     datosUsuario = { nombre, documento };
     document.getElementById("login").classList.add("hidden");
     document.getElementById("examen").classList.remove("hidden");
-
     preguntasSeleccionadas = preguntas.sort(() => 0.5 - Math.random()).slice(0, 5);
+
     const formulario = document.getElementById("formularioEvaluacion");
     formulario.innerHTML = "";
 
@@ -155,29 +377,48 @@
         p.opciones.map((op, j) => `<label><input type='radio' name='preg${i}' value='${j}' required /> ${op}</label>`).join("<br>");
       formulario.appendChild(div);
     });
+
+    iniciarTemporizador();
   }
 
-  function finalizarEvaluacion() {
-    respuestasUsuario = [];
-    let puntaje = 0;
-    let incompletas = false;
 
-    preguntasSeleccionadas.forEach((p, i) => {
-      const respuesta = document.querySelector(`input[name='preg${i}']:checked`);
-      const seleccion = respuesta ? parseInt(respuesta.value) : -1;
+function finalizarEvaluacion() {
+  clearInterval(temporizadorId);
+  const form = document.getElementById("formularioEvaluacion");
+  const respuestas = Array.from(form.querySelectorAll("input[type=radio]:checked"));
 
-      if (seleccion === -1) {
-        incompletas = true;
-      }
+  if (respuestas.length < preguntasSeleccionadas.length) {
+    alert("⏳ Debes responder todas las preguntas antes de finalizar.");
+    return;
+  }
 
-      respuestasUsuario.push(seleccion);
-      if (seleccion === p.correcta) puntaje += 10;
-    });
+  respuestasUsuario = respuestas.map(r => parseInt(r.value));
 
-    if (incompletas) {
-      alert("Por favor, responde todas las preguntas antes de finalizar.");
-      return;
+  let puntaje = 0;
+  respuestasUsuario.forEach((respuesta, i) => {
+    if (respuesta === preguntasSeleccionadas[i].correcta) {
+      puntaje++;
     }
+  });
+
+  const resultadoDiv = document.getElementById("resultado");
+  resultadoDiv.innerHTML = `<h2>Resultado</h2>
+    <p>Estudiante: ${datosUsuario.nombre}</p>
+    <p>Documento: ${datosUsuario.documento}</p>
+    <p>Puntaje: ${puntaje} / ${preguntasSeleccionadas.length}</p>`;
+
+  // Mostrar justificaciones
+  const listaJustificaciones = document.getElementById("listaJustificaciones");
+  listaJustificaciones.innerHTML = "";
+  preguntasSeleccionadas.forEach((preg, i) => {
+    const li = document.createElement("li");
+    li.innerHTML = `<strong>Pregunta ${i + 1}:</strong> ${preg.justificacion}`;
+    listaJustificaciones.appendChild(li);
+  });
+
+  document.getElementById("examen").classList.add("hidden");
+  resultadoDiv.classList.remove("hidden");
+  document.getElementById("justificaciones").classList.remove("hidden");
 
     guardarIntento(datosUsuario.nombre, datosUsuario.documento, puntaje);
 
@@ -187,18 +428,25 @@
     resultado.innerHTML = `<h2>Resultado</h2><p>Puntaje: ${puntaje}/50</p>`;
 
     preguntasSeleccionadas.forEach((p, i) => {
-      resultado.innerHTML += `<p><strong>Pregunta ${i + 1}</strong>: ${p.pregunta}<br>Tu respuesta: ${p.opciones[respuestasUsuario[i]] || "No respondida"}<br>Correcta: ${p.opciones[p.correcta]}</p>`;
+      const seleccion = respuestasUsuario[i];
+      const correcta = p.correcta;
+
+      const color = seleccion === correcta ? 'green' : 'red';
+      const respuestaUsuario = seleccion !== -1 ? p.opciones[seleccion] : 'No respondida';
+      const respuestaCorrecta = p.opciones[correcta];
+
+      resultado.innerHTML += `
+        <div style="margin-bottom: 15px;">
+          <strong>Pregunta ${i + 1}:</strong> ${p.pregunta}<br>
+          <span style="color:${color};">
+            Tu respuesta: ${respuestaUsuario}<br>
+            Respuesta correcta: ${respuestaCorrecta}
+          </span>
+        </div>`;
     });
 
+
     resultado.innerHTML += `<button onclick="reiniciarEvaluacion()">Volver</button>`;
-  }
-
-  function reiniciarEvaluacion() {
-    location.reload();
-  }
-
-  function volverInicio() {
-    location.href = location.pathname;
   }
 
   function guardarIntento(nombre, documento, puntaje) {
@@ -207,54 +455,99 @@
     localStorage.setItem("intentos", JSON.stringify(intentos));
   }
 
-  function mostrarIntentos() {
-    const intentos = JSON.parse(localStorage.getItem("intentos") || "[]");
-    const lista = document.getElementById("listaIntentos");
-    lista.innerHTML = intentos.map((i, idx) =>
-      `<li>${i.nombre} (${i.documento}) - ${i.puntaje}/50 <button onclick='eliminarIntento(${idx})'>Eliminar</button></li>`
-    ).join("");
-
-    const reporte = document.getElementById("reporteResultados");
-    reporte.innerHTML = intentos.map(i =>
-      `<li>${i.nombre} (${i.documento}) - Puntaje: ${i.puntaje}/50</li>`
-    ).join("");
-
-    document.getElementById("informe").classList.remove("hidden");
+  function reiniciarEvaluacion() {
+    location.reload();
   }
+function mostrarLoginAdmin() {
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("adminLogin").classList.remove("hidden");
+}
+
+function verificarAdmin() {
+  const pass = document.getElementById("adminPassword").value;
+  if (pass === "admin123") {
+    document.getElementById("adminLogin").classList.add("hidden");
+    document.getElementById("adminPanel").classList.remove("hidden");
+  } else {
+    alert("Contraseña incorrecta.");
+  }
+}
+
+function mostrarIntentos() {
+  const intentos = JSON.parse(localStorage.getItem("intentos") || "[]");
+  const tbody = document.querySelector("#tablaIntentos tbody");
+  tbody.innerHTML = "";
+  intentos.forEach((i, idx) => {
+    const fila = `<tr><td>${i.nombre}</td><td>${i.documento}</td><td>${i.puntaje}</td>
+      <td><button onclick="eliminarIntento(${idx})">Eliminar</button></td></tr>`;
+    tbody.innerHTML += fila;
+  });
+  document.getElementById("tablaIntentos").classList.remove("hidden");
+}
 
   function eliminarIntento(index) {
     let intentos = JSON.parse(localStorage.getItem("intentos") || "[]");
-    intentos.splice(index, 1);
-    localStorage.setItem("intentos", JSON.stringify(intentos));
-    mostrarIntentos();
-  }
-
-  function verificarPassword() {
-    const password = document.getElementById("adminPassword").value;
-    if (password === "admin123") {
-      if (location.hash === "#admin") {
-        document.getElementById("passwordPrompt").classList.add("hidden");
-        document.getElementById("admin").classList.remove("hidden");
-      } else if (location.hash === "#reporte") {
-        document.getElementById("passwordPrompt").classList.add("hidden");
-        mostrarIntentos();
-      }
-    } else {
-      alert("Contraseña incorrecta");
+    if (confirm("¿Estás seguro de eliminar este intento?")) {
+      intentos.splice(index, 1);
+      localStorage.setItem("intentos", JSON.stringify(intentos));
+      mostrarIntentos();
     }
   }
 
-  function abrirAdmin() {
-    document.getElementById("login").classList.add("hidden");
-    document.getElementById("passwordPrompt").classList.remove("hidden");
-    location.hash = "#admin";
+  function exportarCSV() {
+    const intentos = JSON.parse(localStorage.getItem("intentos") || "[]");
+    if (intentos.length === 0) {
+      alert("No hay intentos registrados.");
+      return;
+    }
+    let csv = "Nombre,Documento,Puntaje\n";
+    intentos.forEach(i => {
+      csv += `"${i.nombre}","${i.documento}","${i.puntaje}"\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'intentos_evaluacion.csv';
+    link.click();
   }
 
-  if (location.hash === "#admin" || location.hash === "#reporte") {
-    document.getElementById("login").classList.add("hidden");
-    document.getElementById("passwordPrompt").classList.remove("hidden");
-  }
+
+  function verPreguntas() {
+  const contenedor = document.getElementById("contenedorPreguntas");
+  contenedor.innerHTML = ""; // Limpiar antes de renderizar
+  contenedor.style.display = "block";
+
+  preguntas.forEach((p, index) => {
+    const card = document.createElement("div");
+    card.style.border = "1px solid #ccc";
+    card.style.padding = "10px";
+    card.style.marginBottom = "15px";
+    card.style.backgroundColor = "#f9f9f9";
+    card.style.borderRadius = "5px";
+
+    // Mostrar la pregunta
+    const pregunta = document.createElement("div");
+    pregunta.innerHTML = `<strong>Pregunta ${index + 1}:</strong> ${p.pregunta}`;
+    card.appendChild(pregunta);
+
+    // Mostrar opciones
+    const lista = document.createElement("ul");
+    p.opciones.forEach((opcion, i) => {
+      const item = document.createElement("li");
+      if (i === p.correcta) {
+        item.innerHTML = `<strong style="color:green;">✔ ${opcion}</strong>`;
+      } else {
+        item.textContent = opcion;
+      }
+      lista.appendChild(item);
+    });
+    card.appendChild(lista);
+
+    contenedor.appendChild(card);
+  });
+}
+
+
 </script>
-
 </body>
 </html>
