@@ -437,7 +437,7 @@ function finalizarEvaluacion() {
   let puntaje = 0;
   respuestasUsuario.forEach((respuesta, i) => {
     if (respuesta === preguntasSeleccionadas[i].correcta) {
-      puntaje++;
+      puntaje+=10;
     }
   });
 
