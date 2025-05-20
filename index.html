@@ -6,107 +6,147 @@
   <title>Evaluación Física</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(to right, #e0c3fc, #f9f4ff);
-      background-image: url('https://wallpapers.com/images/hd/stitch-and-angel-couple-cc9vq9z6als31hxl.jpg');
-      background-size: cover;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-    }
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to right, #e0c3fc, #f9f4ff);
+  background-image: url('https://wallpapers.com/images/hd/stitch-and-angel-couple-cc9vq9z6als31hxl.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
 
-    .container {
-      background: #ffffffee;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-      padding: 30px;
-      margin: 40px 20px;
-      width: 95%;
-      max-width: 600px;
-    }
+.container {
+  background: #ffffffee;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  margin: 40px 20px;
+  width: 100%;
+  max-width: 800px;
+  box-sizing: border-box;
+}
 
-    h2 {
-      text-align: center;
-      color: #7e57c2;
-    }
+h2 {
+  text-align: center;
+  color: #7e57c2;
+}
 
-    label {
-      display: block;
-      margin: 12px 0;
-      font-weight: bold;
-      color: #6a1b9a;
-    }
+label {
+  display: block;
+  margin: 12px 0;
+  font-weight: bold;
+  color: #6a1b9a;
+}
 
-    input[type="text"], input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ce93d8;
-      border-radius: 8px;
-      font-size: 16px;
-      background-color: #f3e5f5;
-    }
+input[type="text"], input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ce93d8;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #f3e5f5;
+  box-sizing: border-box;
+}
 
-    button {
-      background-color: #9575cd;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 12px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-      margin-top: 10px;
-    }
+button {
+  background-color: #9575cd;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 10px;
+  width: 100%;
+  max-width: 300px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
 
-    button:hover {
-      background-color: #7e57c2;
-    }
+button:hover {
+  background-color: #7e57c2;
+}
 
-    .hidden {
-      display: none;
-    }
+.hidden {
+  display: none;
+}
 
-    .question {
-      margin-bottom: 25px;
-    }
+.question {
+  margin-bottom: 25px;
+}
 
-    #reloj {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      background: #ab47bc;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-size: 18px;
-      font-weight: bold;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      z-index: 999;
-    }
+#reloj {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  background: #ab47bc;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
 
-    .admin-panel {
-      margin-top: 20px;
-    }
+.admin-panel {
+  margin-top: 20px;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
 
-    th, td {
-      border: 1px solid #d1c4e9;
-      padding: 8px;
-      text-align: center;
-    }
+th, td {
+  border: 1px solid #d1c4e9;
+  padding: 8px;
+  text-align: center;
+  word-break: break-word;
+}
 
-    th {
-      background-color: #9575cd;
-      color: white;
-    }
+th {
+  background-color: #9575cd;
+  color: white;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 600px) {
+  body {
+    align-items: stretch;
+  }
+
+  .container {
+    margin: 20px 10px;
+    padding: 20px;
+  }
+
+  #reloj {
+    font-size: 16px;
+    padding: 8px 15px;
+    top: 10px;
+    right: 10px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+
+  table, th, td {
+    font-size: 12px;
+    padding: 6px;
+  }
+}
+
   </style>
 </head>
 <body>
